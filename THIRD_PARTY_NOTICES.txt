@@ -1,0 +1,18 @@
+ConvNeXt
+  Source: https://github.com/facebookresearch/ConvNeXt
+  Copyright (c) Meta Platforms, Inc. and affiliates.
+  License: MIT (see LICENSE-ConvNeXt.txt).
+  backbone.py is an adapted encoder returning pooled and spatial features.
+
+Sample4Geo and supplied project implementation
+  Source: https://github.com/Skyy93/Sample4Geo
+  The location-organized data loader, image transformations and project
+  implementation were carried forward from the supplied code supplement.
+  The supplied Apache-2.0 license is retained in LICENSE-project.txt.
+
+Release preparation
+  Core method files are retained from the existing CMMA source supplement.
+  Local pretrained loading, checkpoint I/O and command-line evaluation were
+  added for this distribution. Training entry-point changes add input checks
+  and persistence; they do not add an SSC objective or change the method loss.
+  License texts are retained without substituting a new project license.
