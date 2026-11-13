@@ -80,10 +80,10 @@ Example for SUES-200 at 250 m:
 python train.py --satellite DATA/SUES-200/Training/250/satellite --drone DATA/SUES-200/Training/250/drone --pretrained weights/convnext_base_22k_1k_224.pth --seed 1 --output outputs/sues250/model.pth
 ```
 
-For University-1652:
+For the University-1652 within-dataset experiments, use seed 4:
 
 ```bash
-python train.py --satellite DATA/University-1652/train/satellite --drone DATA/University-1652/train/drone --pretrained weights/convnext_base_22k_1k_224.pth --seed 1 --output outputs/university/model.pth
+python train.py --satellite DATA/University-1652/train/satellite --drone DATA/University-1652/train/drone --pretrained weights/convnext_base_22k_1k_224.pth --seed 4 --output outputs/university_seed4/model.pth
 ```
 
 The entry point uses the source supplement's one-epoch recipe: AdamW, learning rate 0.001, weight decay 0.01, batch size 24, cosine decay with 10% warmup, and CUDA mixed precision when available. The ranking temperature is 0.1; its coefficient increases to 0.1 over the first 10 updates. No validation or test data are used to select a checkpoint. Only the final model is saved; an existing output file is protected from overwriting.
@@ -112,10 +112,12 @@ Use only the final checkpoint trained on the source dataset. Do not train or fin
 
 ### University-1652 to SUES-200
 
-Train one University-1652 model using the command above, then evaluate that same model on all four SUES-200 test heights:
+The University-1652-to-SUES-200 transfer experiment uses a separate source model trained with seed 1. Evaluate the same source checkpoint on all four SUES-200 test heights:
 
 ```bash
-python evaluate_transfer.py university-to-sues --checkpoint outputs/university/model.pth --sues-test DATA/SUES-200/Testing --device cuda --precision amp
+python train.py --satellite DATA/University-1652/train/satellite --drone DATA/University-1652/train/drone --pretrained weights/convnext_base_22k_1k_224.pth --seed 1 --output outputs/university_seed1/model.pth
+
+python evaluate_transfer.py university-to-sues --checkpoint outputs/university_seed1/model.pth --sues-test DATA/SUES-200/Testing --device cuda --precision amp
 ```
 
 Both drone-to-satellite (`D2S`) and satellite-to-drone (`S2D`) retrieval are evaluated separately at 150, 200, 250 and 300 m. The output retains a separate result for each target height, as in the height-specific comparison tables.
